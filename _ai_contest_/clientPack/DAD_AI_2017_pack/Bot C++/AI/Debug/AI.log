@@ -1,0 +1,19 @@
+﻿  AI.cpp
+  easywsclient.cpp
+src\easywsclient.cpp(25): warning C4477: 'fprintf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'WCHAR *'
+  src\easywsclient.cpp(25): note: consider using '%ls' in the format string
+  src\easywsclient.cpp(25): note: consider using '%lls' in the format string
+  src\easywsclient.cpp(25): note: consider using '%Ls' in the format string
+  src\easywsclient.cpp(25): note: consider using '%ws' in the format string
+src\easywsclient.cpp(343): warning C4244: 'argument': conversion from 'uint64_t' to 'int', possible loss of data
+  src\easywsclient.cpp(262): note: see reference to function template instantiation 'void `anonymous-namespace'::_RealWebSocket::sendData<std::_String_iterator<std::_String_val<std::_Simple_types<char>>>>(`anonymous-namespace'::_RealWebSocket::wsheader_type::opcode_type,uint64_t,Iterator,Iterator)' being compiled
+          with
+          [
+              Iterator=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>
+          ]
+  Game.cpp
+src\Game.cpp(120): warning C4101: 'gameTime': unreferenced local variable
+  Generating Code...
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(1357,5): warning MSB8012: TargetPath(D:\_Current_Projects_\_ai_contest_\clientPack\DAD_AI_2017_pack\Bot C++\AI_Template\Debug\AI.lib) does not match the Library's OutputFile property value (D:\_Current_Projects_\_ai_contest_\clientPack\DAD_AI_2017_pack\Bot C++\AI_Template\Debug\AId_2013.lib). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(1359,5): warning MSB8012: TargetName(AI) does not match the Library's OutputFile property value (AId_2013). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+  AI.vcxproj -> D:\_Current_Projects_\_ai_contest_\clientPack\DAD_AI_2017_pack\Bot C++\AI_Template\Debug\AI.lib

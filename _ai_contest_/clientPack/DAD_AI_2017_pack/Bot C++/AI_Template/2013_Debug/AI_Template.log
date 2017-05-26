@@ -1,0 +1,3 @@
+﻿  main.cpp
+src\main.cpp(90): warning C4018: '<': signed/unsigned mismatch
+d:\_current_projects_\_ai_contest_\clientpack\dad_ai_2017_pack\bot c++\ai_template\src\main.cpp(105): error C4716: 'findNearestPath': must return a value
