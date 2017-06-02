@@ -14,6 +14,7 @@ struct Position
 	Position() : x(0), y(0) {}
 	Position(int _x, int _y) : x(_x), y(_y) {}
 	Position operator =(Position pos) { x = pos.x; y = pos.y; return *this; }
+	bool operator == (const Position& coordinates_) { return (x == coordinates_.x && y == coordinates_.y); }
 };
 
 /// @class AI class.

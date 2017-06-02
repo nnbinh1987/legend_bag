@@ -1,6 +1,8 @@
 #include <ai/Game.h>
 #include <ai/AI.h>
 #include <time.h>
+
+#include "AStar.h"
 // ==================== HOW TO RUN THIS =====================
 // Call:
 // "AI_Template.exe -h [host] -p [port] -k [key]"
@@ -30,16 +32,130 @@
 // See <ai/Game.h> and <ai/AI.h> for supported APIs.
 
 clock_t last_clock = clock();
-int iCurrentState = STATE_IDLE;
+int iCurrentState = STATE_FIND_BALL;
+
+void SwitchState(int nextState);
+void doActionIfCan(int action, int direction);
+
+
+const std::vector<Position>	directions = {
+	//LEFT,       UP,     RIGHT,  DOWN
+	{ -1, 0 },{ 0, -1 },{ 1, 0 },{ 0, 1 }
+};
+
+int calculateDistance(Position Pos1, Position Pos2)
+{
+	return abs(Pos1.x - Pos2.x) + abs(Pos1.y - Pos2.y);
+}
+
+Position findNearestTarget()
+{
+	AI *p_ai = AI::GetInstance();
+	int * board = p_ai->GetBoard();	// Access block at (x, y) by using board[CONVERT_COORD(x,y)]
+	Position myPos = p_ai->GetMyPosition();
+	vector<Position> listBall = p_ai->GetListBall();
+
+	if (listBall.size() == 0)
+	{
+		SwitchState(STATE_WAIT_BALL);
+		return myPos;
+	}
+
+	int minSteps = 30;
+	int nearestBall = 0;
+
+	for (int i = 0; i <listBall.size(); i++)
+	{
+		if (calculateDistance(listBall[i], myPos) < minSteps)
+		{
+			minSteps = calculateDistance(listBall[i], myPos);
+			nearestBall = i;
+		}
+	}
+
+	return listBall[nearestBall];
+}
+
+Position findNextMove()
+{
+	return Position(0, 0);
+}
+
+int getDerection(Position myPos, Position nexPos)
+{
+	for (int i = 0; i<=3; i++)
+	{
+		if (nexPos.x == myPos.x + directions[i].x && nexPos.y == myPos.y + directions[i].y)
+		{
+			return i + 1; // +1 to fix with define from AI.
+		}
+	}
+}
 
 void behavior_findball()
-{
-	printf("Finding ball.");
+{	
+	AI *p_ai = AI::GetInstance();
+	Position myPos = p_ai->GetMyPosition();
+	printf("Finding ball.stack = %d", p_ai->GetMyBlockStack());
+	Position nrT = findNearestTarget();
+
+	AStar::Generator generator;
+	generator.setHeuristic(AStar::Heuristic::euclidean);
+	generator.setCollision(p_ai->GetListHardBlock());
+
+	auto path = generator.findPath(myPos, nrT);
+
+	while (path.size() != 0)
+	{
+		auto nextPos = path.back();
+		std::cout << "[" << nextPos.x << "," << nextPos.y << "]";
+		path.pop_back();
+		if (!(nextPos == myPos))
+		{
+			int direction = getDerection(myPos, nextPos);			
+			if (p_ai->GetBlock(Position(nextPos.x, nextPos.y)) == BLOCK_OBSTACLE_SOFT) // PICK UP
+			{
+				if (p_ai->GetMyBlockStack() < 3) // CAN PICK UP
+				{
+					Game::GetInstance()->AI_DoAction(ACTION_PICK, direction);
+				}
+				else // PUT DOWN IN REVERT DIRECTION					
+				{
+					int newdir = direction + 2 > 4 ? direction - 2 : direction + 2;
+					if (p_ai->GetBlock(getNextPosByDirection(myPos, newdir)) == BLOCK_EMPTY)
+					{
+						Game::GetInstance()->AI_DoAction(ACTION_PUT, newdir);
+					}
+					else {
+
+					}
+					
+				}
+				
+			}
+			else if (p_ai->GetBlock(Position(nextPos.x, nextPos.y)) != BLOCK_OBSTACLE_SOFT) // MOVE
+			{
+				Game::GetInstance()->AI_DoAction(ACTION_MOVE, direction);
+			}			
+			return;
+		}
+		
+	}
 }
 
 void behavior_waitball()
 {
+	printf("Waiting ball.");
+	AI *p_ai = AI::GetInstance();
+	Position myPos = p_ai->GetMyPosition();
 
+	vector<Position> listBall = p_ai->GetListBall();
+
+	if (listBall.size() != 0)
+	{
+		SwitchState(STATE_FIND_BALL);
+		return;
+	}
 }
 
 void behavior_settrap()
@@ -77,33 +193,32 @@ void SwitchState(int nextState)
 	iCurrentState = nextState;
 }
 
-Position findNearestTarget()
+Position getNextPosByDirection(Position curPos, int direction)
+{
+	return {curPos.x + directions[direction - 1].x, curPos.y + directions[direction - 1].y };
+}
+
+void doActionIfCan(int action, int direction)
 {
 	AI *p_ai = AI::GetInstance();
-	int * board = p_ai->GetBoard();	// Access block at (x, y) by using board[CONVERT_COORD(x,y)]
 	Position myPos = p_ai->GetMyPosition();
-	vector<Position> listBall = p_ai->GetListBall();
-	
-	int minSteps = 30;
-	int nearestBall = 0;
 
-	for (int i = 0; i <listBall.size(); i++)
+	switch (action)
 	{
-		if (abs(listBall[i].x - myPos.x) + abs(listBall[i].y - myPos.y) < minSteps)
+	case ACTION_PUT:
+		if (p_ai->GetBlock(getNextPosByDirection(myPos, direction)) == BLOCK_EMPTY)
 		{
-			minSteps = abs(listBall[i].x - myPos.x) + abs(listBall[i].y - myPos.y);
-			nearestBall = i;
+
 		}
+		break;
+	case ACTION_PICK:
+		break;
+	case ACTION_MOVE:
+		break;
+	default:
+		break;
 	}
-
-	return listBall[nearestBall];
 }
-
-Position findNextMove()
-{
-	return Position(0, 0);
-}
-
 
 void MakeRandomMove()
 {
@@ -150,9 +265,6 @@ void AI_Update()
 	int time_diff = clock() - last_clock;
 	printf("Diff %d\n", time_diff);
 	last_clock = clock();
-
-	Position nrT = findNearestTarget();
-	printf("[%d,%d]", nrT.x, nrT.y);
 
 	UpdateState(iCurrentState);	
 

@@ -256,12 +256,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AStar.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ai\AI.h" />
     <ClInclude Include="include\ai\defines.h" />
     <ClInclude Include="include\ai\Game.h" />
+    <ClInclude Include="include\AStar.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AI\AI.vcxproj">

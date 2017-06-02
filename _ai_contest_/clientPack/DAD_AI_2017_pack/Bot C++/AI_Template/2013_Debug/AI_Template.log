@@ -1,3 +1,5 @@
 ﻿  main.cpp
-src\main.cpp(90): warning C4018: '<': signed/unsigned mismatch
-d:\_current_projects_\_ai_contest_\clientpack\dad_ai_2017_pack\bot c++\ai_template\src\main.cpp(105): error C4716: 'findNearestPath': must return a value
+src\main.cpp(66): warning C4018: '<': signed/unsigned mismatch
+d:\_ai_contest_\_legend_bag_\_ai_contest_\clientpack\dad_ai_2017_pack\bot c++\ai_template\src\main.cpp(92): warning C4715: 'getDerection': not all control paths return a value
+  AI_Template.vcxproj -> D:\_ai_contest_\_legend_bag_\_ai_contest_\clientPack\DAD_AI_2017_pack\Bot C++\AI_Template\2013_Debug\AI_Template.exe
+  AI_Template.vcxproj -> D:\_ai_contest_\_legend_bag_\_ai_contest_\clientPack\DAD_AI_2017_pack\Bot C++\AI_Template\2013_Debug\AI_Template.pdb (Full PDB)
