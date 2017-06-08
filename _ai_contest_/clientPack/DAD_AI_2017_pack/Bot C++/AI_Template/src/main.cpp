@@ -36,6 +36,7 @@ int iCurrentState = STATE_FIND_BALL;
 
 void SwitchState(int nextState);
 void doActionIfCan(int action, int direction);
+Position getNextPosByDirection(Position curPos, int direction);
 
 
 const std::vector<Position>	directions = {
@@ -103,7 +104,7 @@ void behavior_findball()
 	generator.setHeuristic(AStar::Heuristic::euclidean);
 	generator.setCollision(p_ai->GetListHardBlock());
 
-	auto path = generator.findPath(myPos, nrT);
+	auto path = generator.findPath(myPos, nrT); // find shortest path to nearest point
 
 	while (path.size() != 0)
 	{

@@ -1,9 +1,9 @@
 pushd Server
 start node Server.js -h 127.0.0.1 -p 3011 -k 30 11 -r Replay.rpl -n Player1 Player2
 popd
-pushd WebClient
-start index.html
-popd
+rem pushd WebClient
+rem start index.html
+rem popd
 pushd Arena
 
 IF EXIST P1.exe (
